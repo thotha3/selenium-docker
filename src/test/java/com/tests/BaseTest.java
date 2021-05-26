@@ -1,6 +1,9 @@
 package com.tests;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.ITestContext;
@@ -25,8 +28,14 @@ public class BaseTest {
         if(System.getProperty("BROWSER") != null &&
                 System.getProperty("BROWSER").equalsIgnoreCase("firefox")){
             dc = DesiredCapabilities.firefox();
+            FirefoxOptions options = new FirefoxOptions();
+            options.addArguments("--remote-debugging-port=9222");
+            dc.merge(options);
         }else{
             dc = DesiredCapabilities.chrome();
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--remote-debugging-port=9222");
+            dc.merge(options);
         }
 
         if(System.getProperty("HUB_HOST") != null){
@@ -38,6 +47,13 @@ public class BaseTest {
         String completeUrl = "http://" + host + ":4444/wd/hub";
         dc.setCapability("name", testName);
         this.driver = new RemoteWebDriver(new URL(completeUrl), dc);
+
+        /*ChromeOptions options = new ChromeOptions();
+        options.addArguments("--remote-debugging-port=9222");
+
+        System.setProperty("webdriver.chrome.driver", "/home/josri/chromedriver");
+        this.driver = new ChromeDriver(options);
+         */
     }
 
     @AfterTest
